@@ -25,14 +25,6 @@ with ui.tab_panels(tabs, value = settings).classes("w-full"):
             ui.button("Dark", on_click = dark.enable)
             ui.button("Light", on_click = dark.disable)
 
-@ui.page('/confirmation')
-def confirmation ():
-    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
-        ui.label('Confirm Booking')
-    with ui.footer().style('background-color: #ff9999'):
-        with ui.row():
-            ui.button('Back To Bookings', on_click=ui.navigate.back)
-
 @ui.page('/Booking and Availability Family Doctor')
 def booking():
     with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
@@ -64,8 +56,10 @@ def booking():
     with ui.footer().style('background-color: #ff9999'):
         with ui.row():
             ui.button('Back To Bookings', on_click=ui.navigate.back)
-            ui.button('Back To Bookings', on_click=ui.navigate.to("\confirmation"))
-
+            with ui.dialog() as dialog, ui.card():
+                ui.label(f"Your reservations are confirmed")
+                ui.button('Close', on_click = dialog.close)
+            ui.button("Confirm Booking", on_click = dialog.open)
     class ToggleButton(ui.button):
 
         def __init__(self, *args, **kwargs) -> None:
@@ -165,12 +159,14 @@ def booking():
     with ui.footer().style('background-color: #ff9999'):
         with ui.row():
             ui.button('Back To Doctors', on_click=ui.navigate.back)
+@ui.page('/doctors')
+def doctor():
+    with ui.card().tight():
+        with ui.card_section():
+            ui.label("Dr.A")
+        with ui.card_actions():
+            ui.button("Show times")
 
-@ui.page('/confirmation')
-def booking():
-    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
-        ui.label('View your confirmed bookings: ')
-    ui.label(f"Currently booked times: {', '.join(booked_times) if booked_times else 'None'}")
 
     with ui.footer().style('background-color: #ff9999'):
         with ui.row():
@@ -252,7 +248,7 @@ with ui.tab_panels(tabs, value = home).classes("w-full"):
         greeting = ui.label("Hello!").style('font-size: 24px; font-weight: bold;')
         user_id = ''
         def greet_user(name):
-            greeting.set_text(f"Hello, {name}!")
+            greeting.set_text(f"Hello!")
             user_id.append(name)
 
         ui.input(placeholder="Enter your Patient ID", on_change=lambda e: greet_user(e.value))
