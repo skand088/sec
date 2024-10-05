@@ -1,13 +1,12 @@
 from nicegui import ui
 import pandas as pd
+import datetime as datetime
+
 
 with ui.tabs().classes("w-full") as tabs:
     home = ui.tab("Home")
-    about = ui.tab("About")
     contact = ui.tab("Contact")
     settings = ui.tab("Settings")
-
-
 
 def set_background(color: str) -> None:
     ui.query('body').style(f'background-color: {color}')
@@ -21,128 +20,208 @@ with ui.tab_panels(tabs, value = settings).classes("w-full"):
             ui.button("Dark", on_click = dark.enable)
             ui.button("Light", on_click = dark.disable)
 
+@ui.page('/confirmation')
+def confirmation ():
+    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
+        ui.label('Confirm Booking')
+    with ui.footer().style('background-color: #ff9999'):
+        with ui.row():
+            ui.button('Back To Bookings', on_click=ui.navigate.back)
+
+@ui.page('/Booking and Availability Family Doctor')
+def booking():
+    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
+        ui.label('View Family Doctor Booking and Availability')
+    with ui.footer().style('background-color: #ff9999'):
+        with ui.row():
+            ui.button('Back To Hompage', on_click=ui.navigate.back)
+    
+    class ToggleButton(ui.button):
+
+        def __init__(self, *args, **kwargs) -> None:
+            super().__init__(*args, **kwargs)
+            self._state = True
+            self.on('click', self.toggle)
+
+        def toggle(self) -> None:
+            """Toggle the button state."""
+            if self._state == True:
+                self._state = not self._state
+                self.update()
+                ui.navigate.to('/Booking and Availability')
+
+        def update(self) -> None:
+            self.props(f'color={"green" if self._state else "red"}')
+            super().update()
+
+    class Time:
+        def __init__(self, time, avail):
+            self.time = time
+            self.avail = avail
+
+        def get_time(self):
+            return self.time
+
+        def get_avail(self):
+            return self.avail
+
+        def set_avail(self, avail):
+            self.avail = avail
+
+    ls =[Time('9:00am', True),Time('10:00am', True),Time('11:00am', True),
+        Time('1:00pm', True),Time('2:00am', True),Time('3:00am', True),Time('4:00am', True)]
+    for i in ls:
+        if i.get_avail() == True:
+            ToggleButton(i.get_time())
+
+    patient_bookings =[Time('9:00am', True),Time('10:00am', True),Time('11:00am', True),
+                    Time('1:00pm', True),Time('2:00am', True),Time('3:00am', True),Time('4:00am', True)]
+
+    class Patient:
+
+        def __init__(self, patient_id, name, contact, patient_bookings):
+            self.patient_id = patient_id
+            self.name = name
+            self.contact = contact
+            self.booked = True
+            self.patient_bookings = patient_bookings
+
+    patients = []
+    patients.append(Patient("321", "Jill", "jill@mail.com", patient_bookings))    #list of all patients
+
+    class Doctor:
+        def __init__(self, doctor_id, doctor_name, specialty, available):
+            self.doctor_id = doctor_id
+            self.doctor_name = doctor_name
+            self.specialty = specialty
+            self.available = available
+
+        def get_specialty(self):
+            return self.specialty
+
+        def get_name(self):
+            return self.doctor_name
+
+    doctors = []
+    doctors.append(Doctor("123", "Sam", "Cardiology", True))    #list of all doctors
+
+    def selection(user_specialty):
+
+        special_dr = []
+        for i in doctors:
+            if i.get_specialty().casefold() == user_specialty.casefold():
+                special_dr.append(i)
+        return special_dr
+
+
+    def main():
+        ls = selection('Cardiology')
+        '''
+        for i in ls:
+            print(i.get_name())
+        '''
+        return ls
+
+
+    if __name__ == "__main__":
+        main()
+
+    ## website interfacing
+
+    ## times
+
 @ui.page('/Booking and Availability')
 def booking():
     with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
         ui.label('View Doctor Booking and Availability')
     with ui.footer().style('background-color: #ff9999'):
         with ui.row():
+            ui.button('Back To Bookings', on_click=ui.navigate.back)
+
+
+
+@ui.page('/Booking and Availability Cardiologist')
+def booking():
+    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
+        ui.label('View Cardiologist Booking and Availability')
+    with ui.footer().style('background-color: #ff9999'):
+        with ui.row():
+            ui.button('Back To Hompage', on_click=ui.navigate.back)
+
+@ui.page('/Booking and Availability Dermatologist')
+def booking():
+    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
+        ui.label('View Dermatologist Booking and Availability')
+    with ui.footer().style('background-color: #ff9999'):
+        with ui.row():
+            ui.button('Back To Hompage', on_click=ui.navigate.back)
+
+@ui.page('/Booking and Availability Pediatrician')
+def booking():
+    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
+        ui.label('View Pediatrician Booking and Availability')
+    with ui.footer().style('background-color: #ff9999'):
+        with ui.row():
             ui.button('Back To Hompage', on_click=ui.navigate.back)
 
 specialties = [
     'Cardiologist',
-    'Family Doctor',
     'Dermatologist',
-    'Oncologist',
-    'Pediatrician',
-    'Psychiatrist',
-    'Gynaecologist',
-    'Anesthesiologist'
+    'Family Doctor',
+    'Pediatrician'
 ]
 
 with ui.tab_panels(tabs, value = contact).classes("w-full"):
     with ui.tab_panel(contact):
         with ui.expansion('Family Doctor', icon='medication').classes('w-full'):
             with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
+                ui.image(source="familydoc.jpg")
             with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
+                ui.label('Book an Appointment with a Family Doctor:')
                 ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Family Doctor'))
                 ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
+            ui.button("Book Now", on_click=dialog.open)
         with ui.expansion('Cardiologist', icon='favorite').classes('w-full'):
             with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
+                ui.image(source="cardio.png")
             with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
+                ui.label('Book an Appointment with a Cardiologist:')
                 ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Cardiologist'))
                 ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
+            ui.button("Book Now", on_click=dialog.open)   
         with ui.expansion('Dermatologist', icon='face').classes('w-full'):
             with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
+                ui.image(source="derma.png")
             with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
+                ui.label('Book an Appointment with a Dermatologist:')
                 ui.button('Call', icon='phone' )
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Dermatologist'))
                 ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
-        with ui.expansion('Oncologist', icon='favorite').classes('w-full'):
-            with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
-            with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
-                ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
-                ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
+            ui.button("Book Now", on_click=dialog.open)
         with ui.expansion('Pediatrician', icon='medication').classes('w-full'):
             with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
+                ui.image(source="pedia.png")
             with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
+                ui.label('Book an Appointment with a Pediatrician :')
                 ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Pediatrician'))
                 ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
-        with ui.expansion('Pyschiatrist', icon='face').classes('w-full'):
-            with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
-            with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
-                ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
-                ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
-        with ui.expansion('Gynaecologist', icon='favorite').classes('w-full'):
-            with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
-            with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
-                ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
-                ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
-        with ui.expansion('Anesthesiologist', icon='vaccines').classes('w-full'):
-            with ui.card().tight().style('width: 200px;'):
-                ui.image(source="DSC00017.jpg")
-            with ui.dialog() as dialog, ui.card():
-                ui.label('Book an Appointment with Doctor Tantan:')
-                ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability'))
-                ui.button('Close', on_click=dialog.close)
-            ui.button("Doctor Tantan", on_click=dialog.open)
-
+            ui.button("Book Now", on_click=dialog.open)
+         
+        
 with ui.tab_panels(tabs, value = home).classes("w-full"):
     with ui.tab_panel(home):
         greeting = ui.label("Hello!").style('font-size: 24px; font-weight: bold;')
-
+        user_id = ''
         def greet_user(name):
             greeting.set_text(f"Hello, {name}!")
+            user_id.append(name)
 
-        ui.input(placeholder="Enter your name", on_change=lambda e: greet_user(e.value))
-
-        with ui.column().style('align-items: center; justify-content: center; min-height: 0vh;'):  # Vertically and horizontally center
-            with ui.row().style('display: flex; justify-content: center; width: fit-content; gap: 40px;'):  # Center row and add gap
-                with ui.card().tight().style('width: 200px;'):
-                    ui.image(source="DSC00017.jpg")
-                    with ui.card_actions():
-                        ui.button("Go to Home", on_click=lambda: tabs.set_value("Home"))
-
-                with ui.card().tight().style('width: 200px;'):
-                    with ui.card_actions():
-                        ui.button("Go to About", on_click=lambda: tabs.set_value("About"))
-
-                with ui.card().tight().style('width: 200px;'):
-                    with ui.card_actions():
-                        ui.button("Go to Contact", on_click=lambda: tabs.set_value("Contact"))
-
-                with ui.card().tight().style('width: 200px;'):
-                    with ui.card_actions():
-                        ui.button("Go to Settings", on_click=lambda: tabs.set_value("Settings"))
+        ui.input(placeholder="Enter your Patient ID", on_change=lambda e: greet_user(e.value))
+        ui.date(value = "2024-10-05")
 
 
 
-ui.run(host="127.0.0.1", port=8003)
+ui.run(host="127.0.0.1", port=8003 )
