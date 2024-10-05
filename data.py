@@ -29,7 +29,7 @@ def selection(user_specialty):
     
     special_dr = []
     for i in doctors:
-        if i.specialty().casefold() == user_specialty.casefold():
+        if i.specialty.casefold() == user_specialty.casefold():
             special_dr.append(special_dr)
     return special_dr
 
