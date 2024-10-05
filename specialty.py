@@ -48,17 +48,20 @@ for i in ls:
     if i.get_avail() == True:
         ToggleButton(i.get_time())
 
+patient_bookings =[Time('9:00am', True),Time('10:00am', True),Time('11:00am', True),
+                Time('1:00pm', True),Time('2:00am', True),Time('3:00am', True),Time('4:00am', True)]
 
-class Users:
-    def __init__(self, patient_id, name, contact):
+class Patient:
+
+    def __init__(self, patient_id, name, contact, patient_bookings):
         self.patient_id = patient_id
         self.name = name
         self.contact = contact
         self.booked = True
+        self.patient_bookings = patient_bookings
 
-    patient_bookings =[Time('9:00am', True),Time('10:00am', True),Time('11:00am', True),
-                       Time('1:00pm', True),Time('2:00am', True),Time('3:00am', True),Time('4:00am', True)]
-
+patients = []
+patients.append(Patient("321", "Jill", "jill@mail.com", patient_bookings))    #list of all patients
 
 class Doctor:
     def __init__(self, doctor_id, doctor_name, specialty, available):
@@ -74,7 +77,7 @@ class Doctor:
         return self.doctor_name
 
 doctors = []
-doctors.append(Doctor("123", "Sam", "Cardiology", True))    #list of doctors
+doctors.append(Doctor("123", "Sam", "Cardiology", True))    #list of all doctors
 
 def selection(user_specialty):
     
@@ -109,9 +112,5 @@ def booking():
         with ui.row():
             ui.button('Back To Bookings', on_click=ui.navigate.back)
 
-
-
-
-        
+     
 ui.run()
-
