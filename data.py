@@ -40,8 +40,12 @@ def selection(user_specialty):
 def main():
     user_specialty = input("Enter a specialty: ")    #user will input a specialty
     ls = selection(user_specialty)
+    '''
     for i in ls:
         print(i.get_name())
+    '''
+    return ls
+
 
 if __name__ == "__main__":
     main()
