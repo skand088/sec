@@ -1,6 +1,11 @@
 from nicegui import ui
-import pandas as pd
-import datetime as datetime
+
+time_slots = {
+    '9:00am': True, '10:00am': True, '11:00am': True,
+    '1:00pm': True, '2:00pm': True, '3:00pm': True, '4:00pm': True
+}
+
+booked_times = []
 
 
 with ui.tabs().classes("w-full") as tabs:
@@ -32,10 +37,35 @@ def confirmation ():
 def booking():
     with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
         ui.label('View Family Doctor Booking and Availability')
+    with ui.row().classes('justify-center'):
+                for time, available in time_slots.items():
+                    def create_button(time):
+                        def toggle_booking():
+                            if time in booked_times:
+                                booked_times.remove(time)
+                                time_slots[time] = not time_slots[time]
+                            else:
+                                booked_times.append(time)
+                                time_slots[time] = not time_slots[time]
+
+                            button.props(f'color={"green" if time not in booked_times else "red"}')
+                            button.update() 
+
+                            booking_info.set_text(f"Currently booked times: {', '.join(booked_times) if booked_times else 'None'}")
+                        button = ui.button(time, on_click=toggle_booking)
+                        button.props(f'color={"green" if available else "red"}')
+                        return button
+                    
+                    create_button(time)
+                        
+                booking_info = ui.label(f"Currently booked times: {', '.join(booked_times) if booked_times else 'None'}")
+
+
     with ui.footer().style('background-color: #ff9999'):
         with ui.row():
-            ui.button('Back To Hompage', on_click=ui.navigate.back)
-    
+            ui.button('Back To Bookings', on_click=ui.navigate.back)
+            ui.button('Back To Bookings', on_click=ui.navigate.to("\confirmation"))
+
     class ToggleButton(ui.button):
 
         def __init__(self, *args, **kwargs) -> None:
@@ -70,9 +100,7 @@ def booking():
 
     ls =[Time('9:00am', True),Time('10:00am', True),Time('11:00am', True),
         Time('1:00pm', True),Time('2:00am', True),Time('3:00am', True),Time('4:00am', True)]
-    for i in ls:
-        if i.get_avail() == True:
-            ToggleButton(i.get_time())
+    
 
     patient_bookings =[Time('9:00am', True),Time('10:00am', True),Time('11:00am', True),
                     Time('1:00pm', True),Time('2:00am', True),Time('3:00am', True),Time('4:00am', True)]
@@ -136,9 +164,17 @@ def booking():
         ui.label('View Doctor Booking and Availability')
     with ui.footer().style('background-color: #ff9999'):
         with ui.row():
-            ui.button('Back To Bookings', on_click=ui.navigate.back)
+            ui.button('Back To Doctors', on_click=ui.navigate.back)
 
+@ui.page('/confirmation')
+def booking():
+    with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
+        ui.label('View your confirmed bookings: ')
+    ui.label(f"Currently booked times: {', '.join(booked_times) if booked_times else 'None'}")
 
+    with ui.footer().style('background-color: #ff9999'):
+        with ui.row():
+            ui.button('Back To Times', on_click=ui.navigate.back)
 
 @ui.page('/Booking and Availability Cardiologist')
 def booking():
