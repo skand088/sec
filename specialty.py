@@ -60,6 +60,12 @@ class Patient:
         self.booked = True
         self.patient_bookings = patient_bookings
 
+    def get_patient_bookings(self):
+        return self.patient_bookings
+    
+    def set_patient_bookings(self, patient_bookings):
+        self.patient_bookings = patient_bookings
+
 patients = []
 patients.append(Patient("321", "Jill", "jill@mail.com", patient_bookings))    #list of all patients
 
