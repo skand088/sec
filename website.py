@@ -28,7 +28,7 @@ with ui.tab_panels(tabs, value = settings).classes("w-full"):
 @ui.page('/Booking and Availability Family Doctor')
 def booking():
     with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
-        ui.label('View Family Doctor Booking and Availability')
+        ui.label('View DoctorBooking and Availability')
     with ui.row().classes('justify-center'):
                 for time, available in time_slots.items():
                     def create_button(time):
@@ -220,7 +220,7 @@ with ui.tab_panels(tabs, value = contact).classes("w-full"):
             with ui.dialog() as dialog, ui.card():
                 ui.label('Book an Appointment with a Cardiologist:')
                 ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Cardiologist'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Family Doctor'))
                 ui.button('Close', on_click=dialog.close)
             ui.button("Book Now", on_click=dialog.open)   
         with ui.expansion('Dermatologist', icon='face').classes('w-full'):
@@ -229,7 +229,7 @@ with ui.tab_panels(tabs, value = contact).classes("w-full"):
             with ui.dialog() as dialog, ui.card():
                 ui.label('Book an Appointment with a Dermatologist:')
                 ui.button('Call', icon='phone' )
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Dermatologist'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Family Doctor'))
                 ui.button('Close', on_click=dialog.close)
             ui.button("Book Now", on_click=dialog.open)
         with ui.expansion('Pediatrician', icon='medication').classes('w-full'):
@@ -238,7 +238,7 @@ with ui.tab_panels(tabs, value = contact).classes("w-full"):
             with ui.dialog() as dialog, ui.card():
                 ui.label('Book an Appointment with a Pediatrician :')
                 ui.button('Call', icon='phone')
-                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Pediatrician'))
+                ui.button('Book online', icon = 'laptop', on_click = lambda: ui.navigate.to('/Booking and Availability Family Doctor'))
                 ui.button('Close', on_click=dialog.close)
             ui.button("Book Now", on_click=dialog.open)
          
