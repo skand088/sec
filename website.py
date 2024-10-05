@@ -29,6 +29,7 @@ with ui.tab_panels(tabs, value = settings).classes("w-full"):
 def booking():
     with ui.header(elevated=True).style('background-color: #ff9999').classes('items-center justify-between'):
         ui.label('View DoctorBooking and Availability')
+    ui.date(value = "2024-10-05")
     with ui.row().classes('justify-center'):
                 for time, available in time_slots.items():
                     def create_button(time):
@@ -252,7 +253,6 @@ with ui.tab_panels(tabs, value = home).classes("w-full"):
             user_id.append(name)
 
         ui.input(placeholder="Enter your Patient ID", on_change=lambda e: greet_user(e.value))
-        ui.date(value = "2024-10-05")
 
 
 
