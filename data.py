@@ -19,8 +19,11 @@ class Doctor:
         self.specialty = specialty
         self.available = available
     
-    def specialty(self):
+    def get_specialty(self):
         return self.specialty
+    
+    def get_name(self):
+        return self.doctor_name
 
 doctors = []
 doctors.append(Doctor("123", "Sam", "Cardiology", True))    #list of doctors
@@ -29,15 +32,16 @@ def selection(user_specialty):
     
     special_dr = []
     for i in doctors:
-        if i.specialty.casefold() == user_specialty.casefold():
-            special_dr.append(special_dr)
+        if i.get_specialty().casefold() == user_specialty.casefold():
+            special_dr.append(i)
     return special_dr
 
 
 def main():
     user_specialty = input("Enter a specialty: ")    #user will input a specialty
-    list = selection(user_specialty)
-    return list
+    ls = selection(user_specialty)
+    for i in ls:
+        print(i.get_name())
 
 if __name__ == "__main__":
     main()
