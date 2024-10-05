@@ -21,5 +21,9 @@ class Doctor:
     def specialty(self):
         return self.specialty
     
-if __name__ == '__main__':
+
+def main():
     
+
+if __name__ == '__main__':
+    main()
